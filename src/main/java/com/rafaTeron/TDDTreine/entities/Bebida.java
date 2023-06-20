@@ -2,13 +2,16 @@ package com.rafaTeron.TDDTreine.entities;
 
 import java.util.Objects;
 
-public class Tarefa {
+public class Bebida {
 	
 	private String nome;
+	private Integer estoque;
+	private Double valor;
 
-	public Tarefa(String nome) {
-		super();
+	public Bebida(String nome, Integer estoque, Double valor) {
 		this.nome = nome;
+		this.estoque = estoque;
+		this.valor = valor;
 	}
 
 	public String getNome() {
@@ -17,6 +20,22 @@ public class Tarefa {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Integer getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Integer estoque) {
+		this.estoque = estoque;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
 	}
 
 	@Override
@@ -32,7 +51,7 @@ public class Tarefa {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Tarefa other = (Tarefa) obj;
+		Bebida other = (Bebida) obj;
 		return Objects.equals(nome, other.nome);
 	}
 	
