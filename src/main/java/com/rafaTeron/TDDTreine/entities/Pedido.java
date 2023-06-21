@@ -50,6 +50,11 @@ public class Pedido {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
+
+	public void setBebida(List<Object> asList) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

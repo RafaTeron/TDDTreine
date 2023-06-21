@@ -11,6 +11,8 @@ import com.rafaTeron.TDDTreine.exceptions.BebidaSemEstoqueException;
 import com.rafaTeron.TDDTreine.exceptions.PedidoException;
 import com.rafaTeron.TDDTreine.utils.DataUtils;
 
+import buildermaster.BuilderMaster;
+
 
 
 public class PedidoService {
@@ -48,6 +50,10 @@ public class PedidoService {
 		pedido.setDataFinalEntrega(dataEntrega);
 		
 		return pedido;
+	}
+	
+	public static void main(String[] args) {
+		new BuilderMaster().gerarCodigoClasse(Bebida.class);
 	}
 
 }
