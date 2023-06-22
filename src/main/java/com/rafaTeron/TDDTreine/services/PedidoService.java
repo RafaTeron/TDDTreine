@@ -1,7 +1,7 @@
 package com.rafaTeron.TDDTreine.services;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.rafaTeron.TDDTreine.entities.Bebida;
@@ -33,7 +33,7 @@ public class PedidoService {
 		Pedido pedido = new Pedido();
 		pedido.setUsuario(usuario);
 		pedido.setPedido(bebidas);
-		pedido.setDataInicio(new Date());
+		pedido.setDataInicio(LocalDate.now());
 		Double valorTotal = 0d;
 		for(int i = 0; i < bebidas.size(); i++) {
 			Bebida bebida = bebidas.get(i);
@@ -42,9 +42,9 @@ public class PedidoService {
 		}
 		pedido.setValor(valorTotal);
 		
-		Date dataEntrega = new Date();
+		LocalDate dataEntrega = LocalDate.now();
 		dataEntrega = DataUtils.adicionarDias(dataEntrega, 2);
-		if (DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)) {
+		if (dataEntrega.getDayOfWeek() == DayOfWeek.SUNDAY) {
 			dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
 		}
 		pedido.setDataFinalEntrega(dataEntrega);

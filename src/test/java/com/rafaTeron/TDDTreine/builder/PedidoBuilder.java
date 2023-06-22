@@ -1,12 +1,12 @@
 package com.rafaTeron.TDDTreine.builder;
 
-import com.rafaTeron.TDDTreine.entities.Usuario;
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.lang.Double;
-import java.util.Date;
 
 import com.rafaTeron.TDDTreine.entities.Bebida;
 import com.rafaTeron.TDDTreine.entities.Pedido;
+import com.rafaTeron.TDDTreine.entities.Usuario;
+import com.rafaTeron.TDDTreine.utils.DataUtils;
 
 
 public class PedidoBuilder {
@@ -26,8 +26,8 @@ public class PedidoBuilder {
 		
 		elemento.setUsuario(UsuarioBuilder.umUsuario().agora());
 		elemento.setPedido(Arrays.asList(BebidaBuilder.umBebida().agora()));
-		elemento.setDataInicio(new Date());
-		elemento.setDataFinalEntrega(null);
+		elemento.setDataInicio(LocalDate.now());
+		elemento.setDataFinalEntrega(DataUtils.obterDataComDiferencaDias(2));
 		elemento.setValor(3.0);
 	}
 
@@ -41,12 +41,12 @@ public class PedidoBuilder {
 		return this;
 	}
 
-	public PedidoBuilder comDataInicioPedido(Date param) {
+	public PedidoBuilder comDataInicioPedido(LocalDate param) {
 		elemento.setDataInicio(param);
 		return this;
 	}
 
-	public PedidoBuilder comDataFinalEntrega(Date param) {
+	public PedidoBuilder comDataFinalEntrega(LocalDate param) {
 		elemento.setDataFinalEntrega(param);
 		return this;
 	}

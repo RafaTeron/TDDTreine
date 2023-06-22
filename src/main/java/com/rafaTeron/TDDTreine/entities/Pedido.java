@@ -1,14 +1,14 @@
 package com.rafaTeron.TDDTreine.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Pedido {
 	
 	private Usuario usuario;
 	private List<Bebida> bebida;
-	private Date dataInicioPedido;
-	private Date dataFinalEntrega;
+	private LocalDate dataInicioPedido;
+	private LocalDate dataFinalEntrega;
 	private Double valor;
 	
 	public Usuario getUsuario() {
@@ -27,19 +27,19 @@ public class Pedido {
 		this.bebida = bebida;
 	}
 
-	public Date getDataInicio() {
+	public LocalDate getDataInicio() {
 		return dataInicioPedido;
 	}
 
-	public void setDataInicio(Date dataInicio) {
+	public void setDataInicio(LocalDate dataInicio) {
 		this.dataInicioPedido = dataInicio;
 	}
 
-	public Date getDataFinalEntrega() {
+	public LocalDate getDataFinalEntrega() {
 		return dataFinalEntrega;
 	}
 
-	public void setDataFinalEntrega(Date dataFinalEntrega) {
+	public void setDataFinalEntrega(LocalDate dataFinalEntrega) {
 		this.dataFinalEntrega = dataFinalEntrega;
 	}
 
