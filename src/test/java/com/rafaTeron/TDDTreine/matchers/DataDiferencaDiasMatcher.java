@@ -16,7 +16,7 @@ public class DataDiferencaDiasMatcher extends TypeSafeMatcher<LocalDate> {
     }
 
     public void describeTo(Description description) {
-    	description.appendText("Data com diferença de " + qtdDias + " dia(s)");
+    	
     }
 
     @Override

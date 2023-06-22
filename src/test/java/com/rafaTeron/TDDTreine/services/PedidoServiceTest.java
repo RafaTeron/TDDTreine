@@ -5,11 +5,9 @@ package com.rafaTeron.TDDTreine.services;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ErrorCollector;
 
 import com.rafaTeron.TDDTreine.builder.BebidaBuilder;
 import com.rafaTeron.TDDTreine.builder.UsuarioBuilder;
@@ -23,9 +21,6 @@ import com.rafaTeron.TDDTreine.matchers.MatchersProprios;
 public class PedidoServiceTest {
 	
 	private PedidoService pedidoService;
-	
-	@Rule
-	private ErrorCollector error = new ErrorCollector();
 	
 	@BeforeEach
 	public void setup(){
@@ -41,10 +36,12 @@ public class PedidoServiceTest {
 		//acao
 		Pedido pedido = pedidoService.comprarBebida(usuario, bebidas);
 			
-		//verificacao
-		Assertions.assertEquals(pedido.getValor(), 3.0);
-		Assertions.assertEquals( pedido.getDataInicio(),MatchersProprios.hoje());
-		Assertions.assertEquals(pedido.getDataFinalEntrega() ,LocalDate.now().plusDays(2));
+		//verificacao		
+		Assertions.assertAll("Pedido de Bebida",
+		        () -> Assertions.assertEquals(pedido.getValor(), 3.0),
+		        () -> Assertions.assertEquals(pedido.getDataInicio(),MatchersProprios.hoje()),
+		        () -> Assertions.assertEquals(pedido.getDataFinalEntrega() ,LocalDate.now().plusDays(2))
+		);
 	}
 
 }

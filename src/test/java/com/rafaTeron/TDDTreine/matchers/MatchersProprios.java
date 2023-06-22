@@ -21,9 +21,6 @@ public class MatchersProprios {
         return LocalDate.now();
     }
 
-    public static DataDiferencaDiasMatcher ehHoje() {
-        return new DataDiferencaDiasMatcher(0);
-    }
 }
 
 
