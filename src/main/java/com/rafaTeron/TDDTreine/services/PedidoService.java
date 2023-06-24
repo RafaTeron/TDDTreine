@@ -26,7 +26,7 @@ public class PedidoService {
 		}
 		for(Bebida bebida: bebidas) {
 			if(bebida.getEstoque() == 0) {
-				throw new BebidaSemEstoqueException();
+				throw new BebidaSemEstoqueException("Sem bebida no estoque");
 			}
 		}
 		
