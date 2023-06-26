@@ -8,21 +8,25 @@ import java.util.Locale;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+import com.rafaTeron.TDDTreine.utils.DataUtils;
+
 public class DiaSemanaMatcher extends TypeSafeMatcher<LocalDate> {
 
-    private DayOfWeek diaSemana;
+    private Integer diaSemana;
 
-    public DiaSemanaMatcher(DayOfWeek diaSemana) {
+    public DiaSemanaMatcher(Integer diaSemana) {
         this.diaSemana = diaSemana;
     }
 
     public void describeTo(Description desc) {
-        String dataExtenso = diaSemana.getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
-        desc.appendText(dataExtenso);
+    	DayOfWeek diaSemana = DayOfWeek.MONDAY;
+    	LocalDate data = LocalDate.now().with(diaSemana);
+    	String dataExtenso = data.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
+    	desc.appendText(dataExtenso);
     }
 
     @Override
     protected boolean matchesSafely(LocalDate data) {
-        return data.getDayOfWeek() == diaSemana;
+        return DataUtils.verificarDiaSemana(data, diaSemana);
     }
 }

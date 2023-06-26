@@ -1,6 +1,6 @@
 package com.rafaTeron.TDDTreine.services;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ public class CalculadoraTest {
 		int resultado = calc.somar(a, b);
 		
 		//verificacao
-		Assert.assertEquals(8, resultado);
+		Assertions.assertEquals(8, resultado);
 		
 	}
 	
@@ -41,7 +41,7 @@ public class CalculadoraTest {
 		int resultado = calc.subtrair(a, b);
 		
 		//verificacao
-		Assert.assertEquals(3, resultado);
+		Assertions.assertEquals(3, resultado);
 		
 	}
 	
@@ -55,7 +55,7 @@ public class CalculadoraTest {
 		int resultado = calc.divide(a, b);
 		
 		//verificacao
-		Assert.assertEquals(2, resultado);
+		Assertions.assertEquals(2, resultado);
 	}
 	
 	

@@ -9,9 +9,9 @@ import com.rafaTeron.TDDTreine.utils.DataUtils;
 
 public class DataDiferencaDiasMatcher extends TypeSafeMatcher<LocalDate> {
 
-    private int qtdDias;
+    private Integer qtdDias;
 
-    public DataDiferencaDiasMatcher(int qtdDias) {
+    public DataDiferencaDiasMatcher(Integer qtdDias) {
         this.qtdDias = qtdDias;
     }
 
@@ -21,7 +21,6 @@ public class DataDiferencaDiasMatcher extends TypeSafeMatcher<LocalDate> {
 
     @Override
     protected boolean matchesSafely(LocalDate data) {
-        LocalDate dataComparacao = DataUtils.obterDataComDiferencaDias(qtdDias);
-        return DataUtils.isMesmaData(data, dataComparacao);
+    	return DataUtils.isMesmaData(data, DataUtils.obterDataComDiferencaDias(qtdDias));
     }
 }

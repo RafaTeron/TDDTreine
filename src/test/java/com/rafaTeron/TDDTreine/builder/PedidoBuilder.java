@@ -27,7 +27,7 @@ public class PedidoBuilder {
 		elemento.setUsuario(UsuarioBuilder.umUsuario().agora());
 		elemento.setPedido(Arrays.asList(BebidaBuilder.umBebida().agora()));
 		elemento.setDataInicio(LocalDate.now());
-		elemento.setDataFinalEntrega(DataUtils.obterDataComDiferencaDias(2));
+		elemento.setDataFinalEntrega(DataUtils.obterDataComDiferencaDias(1));
 		elemento.setValor(3.0);
 	}
 
