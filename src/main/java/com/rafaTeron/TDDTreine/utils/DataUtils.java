@@ -22,7 +22,7 @@ public class DataUtils {
 	        return data1.isEqual(data2);
 	    }
 	    
-	    public static boolean verificarDiaSemana(LocalDate data, Integer diaSemana) {
+	    public static boolean verificarDiaSemana(LocalDate data, DayOfWeek diaSemana) {
 	    	LocalDate data1 = LocalDate.now();
 	    	DayOfWeek diaSemana1 = DayOfWeek.MONDAY;
 

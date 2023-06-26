@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +15,7 @@ import com.rafaTeron.TDDTreine.entities.Pedido;
 import com.rafaTeron.TDDTreine.entities.Usuario;
 import com.rafaTeron.TDDTreine.exceptions.BebidaSemEstoqueException;
 import com.rafaTeron.TDDTreine.exceptions.PedidoException;
+import com.rafaTeron.TDDTreine.matchers.MatchersProprios;
 
 public class PedidoServiceTest {
 
@@ -89,8 +89,6 @@ public class PedidoServiceTest {
 
 	@Test
 	public void naoEntregaNoDomingo() throws BebidaSemEstoqueException, PedidoException {
-		Assumptions.assumeTrue(LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY);
-
 		// cenario
 		Usuario usuario = UsuarioBuilder.umUsuario().agora();
 		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().agora());
@@ -98,8 +96,8 @@ public class PedidoServiceTest {
 		// acao
 		Pedido pedido = pedidoService.comprarBebida(usuario, bebidas);
 
-		if (pedido.getDataFinalEntrega().getDayOfWeek() == DayOfWeek.SUNDAY) {
-			Assertions.assertEquals(pedido.getDataFinalEntrega(), LocalDate.now().plusDays(1));
+		if (pedido.getDataFinalEntrega().getDayOfWeek() == DayOfWeek.MONDAY) {
+			Assertions.assertTrue(MatchersProprios.caiNumaSegunda().matches(pedido.getDataFinalEntrega()));
 		}
 	}
 

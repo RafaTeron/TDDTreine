@@ -43,7 +43,7 @@ public class PedidoService {
 		pedido.setValor(valorTotal);
 		
 		LocalDate dataEntrega = LocalDate.now();
-	    dataEntrega = DataUtils.adicionarDias(dataEntrega, 2);
+	    dataEntrega = DataUtils.adicionarDias(dataEntrega, 6);
 		
 		if (dataEntrega.getDayOfWeek() == DayOfWeek.SUNDAY) {
 			dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);

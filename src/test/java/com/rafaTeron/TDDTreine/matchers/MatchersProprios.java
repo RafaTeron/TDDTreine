@@ -1,16 +1,16 @@
 package com.rafaTeron.TDDTreine.matchers;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Calendar;
 
 public class MatchersProprios {
 
-    public static DiaSemanaMatcher caiEm(Integer diaSemana) {
+    public static DiaSemanaMatcher caiEm(DayOfWeek diaSemana) {
         return new DiaSemanaMatcher(diaSemana);
     }
 
     public static DiaSemanaMatcher caiNumaSegunda() {
-        return new DiaSemanaMatcher(Calendar.MONDAY);
+        return new DiaSemanaMatcher(DayOfWeek.MONDAY);
     }
 
     public static DataDiferencaDiasMatcher ehHojeComDiferencaDias(Integer qtdDias) {
