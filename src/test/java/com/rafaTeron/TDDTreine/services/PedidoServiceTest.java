@@ -64,11 +64,14 @@ public class PedidoServiceTest {
 		// cenario
 		Usuario usuario = UsuarioBuilder.umUsuario().agora();
 
-		// Ação
+		
 		try {
+			// Ação
 			pedidoService.comprarBebida(usuario, null);
+			//Verificaçao
 			Assertions.fail("Tem Bebida");
 		} catch (PedidoException e) {
+			//Verificaçao
 			Assertions.assertEquals(e.getMessage(), "Sem bebida");
 		}
 	}
@@ -78,11 +81,14 @@ public class PedidoServiceTest {
 		// cenario
 		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().comEstoque(1).agora());
 
-		// Ação
+		
 		try {
+			// Ação
 			pedidoService.comprarBebida(null, bebidas);
+			//Verificaçao
 			Assertions.fail("Usuario Ativo");
 		} catch (PedidoException e) {
+			//Verificaçao
 			Assertions.assertEquals(e.getMessage(), "Usuario Inválido");
 		}
 	}
@@ -96,9 +102,12 @@ public class PedidoServiceTest {
 		// acao
 		Pedido pedido = pedidoService.comprarBebida(usuario, bebidas);
 
+		//verificaçao
 		if (pedido.getDataFinalEntrega().getDayOfWeek() == DayOfWeek.MONDAY) {
 			Assertions.assertTrue(MatchersProprios.caiNumaSegunda().matches(pedido.getDataFinalEntrega()));
 		}
 	}
+	
+	
 
 }
