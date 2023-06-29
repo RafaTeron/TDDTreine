@@ -125,16 +125,14 @@ public class PedidoServiceTest {
 	}
 	
 	@Test
-	public void naoDevePedirBebidaParaNegativadoSPC() throws PedidoException,BebidaSemEstoqueException {
+	public void naoDevePedirBebidaParaNegativadoSPC() throws Exception {
 		//cenario
 		Usuario usuario = UsuarioBuilder.umUsuario().agora();
 		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().agora());
 
-		try {
-			Mockito.when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
-		} catch (Exception e) {
-			throw new PedidoException("Problema com SPC , tente novamente.");
-		}
+		
+		Mockito.when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
+		
 		//açao
 		try {
 			pedidoService.comprarBebida(usuario, bebidas);
@@ -144,7 +142,7 @@ public class PedidoServiceTest {
 			Assertions.assertEquals( "Usuario negativado" ,e.getMessage());
 		}
 		
-		
+		Mockito.verify(spcService).possuiNegativacao(usuario);
 	}
 
 }
