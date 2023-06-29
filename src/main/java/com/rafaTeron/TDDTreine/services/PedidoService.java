@@ -9,6 +9,7 @@ import com.rafaTeron.TDDTreine.entities.Pedido;
 import com.rafaTeron.TDDTreine.entities.Usuario;
 import com.rafaTeron.TDDTreine.exceptions.BebidaSemEstoqueException;
 import com.rafaTeron.TDDTreine.exceptions.PedidoException;
+import com.rafaTeron.TDDTreine.repositories.PedidoRepository;
 import com.rafaTeron.TDDTreine.utils.DataUtils;
 
 import buildermaster.BuilderMaster;
@@ -17,7 +18,10 @@ import buildermaster.BuilderMaster;
 
 public class PedidoService {
 	
-	public Pedido comprarBebida(Usuario usuario, List<Bebida> bebidas) throws BebidaSemEstoqueException, PedidoException {
+	private PedidoRepository pedidoRepository;
+	private SPCService spcService;
+	
+	public Pedido comprarBebida(Usuario usuario, List<Bebida> bebidas) throws PedidoException,BebidaSemEstoqueException {
 		if (usuario == null) {
 			throw new PedidoException("Usuario Inválido");
 		}
@@ -28,6 +32,17 @@ public class PedidoService {
 			if(bebida.getEstoque() == 0) {
 				throw new BebidaSemEstoqueException("Sem bebida no estoque");
 			}
+		}
+		
+		boolean negativado;
+		try {
+			negativado = spcService.possuiNegativacao(usuario);
+		} catch (Exception e) {
+		    throw new PedidoException("Problema com SPC , tente novamente.");
+		}
+		
+		if(negativado) {
+			throw new PedidoException("Usuario negativado");
 		}
 		
 		Pedido pedido = new Pedido();
@@ -49,6 +64,8 @@ public class PedidoService {
 			dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
 		}
 		pedido.setDataFinalEntrega(dataEntrega);
+		
+		pedidoRepository.save(pedido);
 		
 		return pedido;
 	}

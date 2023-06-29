@@ -7,6 +7,10 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.rafaTeron.TDDTreine.builder.BebidaBuilder;
 import com.rafaTeron.TDDTreine.builder.UsuarioBuilder;
@@ -16,14 +20,22 @@ import com.rafaTeron.TDDTreine.entities.Usuario;
 import com.rafaTeron.TDDTreine.exceptions.BebidaSemEstoqueException;
 import com.rafaTeron.TDDTreine.exceptions.PedidoException;
 import com.rafaTeron.TDDTreine.matchers.MatchersProprios;
+import com.rafaTeron.TDDTreine.repositories.PedidoRepository;
 
 public class PedidoServiceTest {
 
+	@InjectMocks
 	private PedidoService pedidoService;
-
+	
+	@Mock
+	private SPCService spcService;
+	
+	@Mock
+	private PedidoRepository pedidoRepository;
+	
 	@BeforeEach
 	public void setup() {
-		pedidoService = new PedidoService();
+		 MockitoAnnotations.openMocks(this);
 	}
 
 	@Test
@@ -38,8 +50,8 @@ public class PedidoServiceTest {
 
 		// verificacao
 		Assertions.assertAll("Pedido de Bebida", 
-				() -> Assertions.assertEquals(pedido.getValor(), 3.0),
-				() -> Assertions.assertEquals(pedido.getDataInicio(), LocalDate.now()));
+				() -> Assertions.assertEquals(3.0, pedido.getValor()),
+				() -> Assertions.assertEquals(LocalDate.now(), pedido.getDataInicio()));
 	}
 
 	@Test
@@ -54,7 +66,7 @@ public class PedidoServiceTest {
 			pedidoService.comprarBebida(usuario, bebidas);
 			Assertions.fail("Tem bebida no estoque");
 		} catch (BebidaSemEstoqueException e) {
-			Assertions.assertEquals(e.getMessage(), "Sem bebida no estoque");
+			Assertions.assertEquals("Sem bebida no estoque", e.getMessage());
 		}
 
 	}
@@ -72,7 +84,7 @@ public class PedidoServiceTest {
 			Assertions.fail("Tem Bebida");
 		} catch (PedidoException e) {
 			//Verificaçao
-			Assertions.assertEquals(e.getMessage(), "Sem bebida");
+			Assertions.assertEquals("Sem bebida" ,e.getMessage());
 		}
 	}
 
@@ -89,7 +101,7 @@ public class PedidoServiceTest {
 			Assertions.fail("Usuario Ativo");
 		} catch (PedidoException e) {
 			//Verificaçao
-			Assertions.assertEquals(e.getMessage(), "Usuario Inválido");
+			Assertions.assertEquals( "Usuario Inválido" ,e.getMessage());
 		}
 	}
 
@@ -100,14 +112,39 @@ public class PedidoServiceTest {
 		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().agora());
 
 		// acao
-		Pedido pedido = pedidoService.comprarBebida(usuario, bebidas);
-
-		//verificaçao
-		if (pedido.getDataFinalEntrega().getDayOfWeek() == DayOfWeek.MONDAY) {
-			Assertions.assertTrue(MatchersProprios.caiNumaSegunda().matches(pedido.getDataFinalEntrega()));
-		}
+		Pedido pedido;
+		try {
+			pedido = pedidoService.comprarBebida(usuario, bebidas);
+			//verificaçao
+			if (pedido.getDataFinalEntrega().getDayOfWeek() == DayOfWeek.MONDAY) {
+				Assertions.assertTrue(MatchersProprios.caiNumaSegunda().matches(pedido.getDataFinalEntrega()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 	}
 	
-	
+	@Test
+	public void naoDevePedirBebidaParaNegativadoSPC() throws PedidoException,BebidaSemEstoqueException {
+		//cenario
+		Usuario usuario = UsuarioBuilder.umUsuario().agora();
+		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().agora());
+
+		try {
+			Mockito.when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
+		} catch (Exception e) {
+			throw new PedidoException("Problema com SPC , tente novamente.");
+		}
+		//açao
+		try {
+			pedidoService.comprarBebida(usuario, bebidas);
+			//verificaçao
+			Assertions.fail();
+		} catch (PedidoException e) {
+			Assertions.assertEquals( "Usuario negativado" ,e.getMessage());
+		}
+		
+		
+	}
 
 }

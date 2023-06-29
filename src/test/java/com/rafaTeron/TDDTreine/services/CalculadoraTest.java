@@ -3,6 +3,8 @@ package com.rafaTeron.TDDTreine.services;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
 import com.rafaTeron.TDDTreine.exceptions.NaoPodeDividirPorZeroException;
 
@@ -10,11 +12,12 @@ import com.rafaTeron.TDDTreine.exceptions.NaoPodeDividirPorZeroException;
 
 public class CalculadoraTest {
 	
+	@InjectMocks
 	private Calculadora calc;
 	
 	@BeforeEach
 	public void setup(){
-		calc = new Calculadora();
+		MockitoAnnotations.openMocks(this);
 	}
 
 	@Test
