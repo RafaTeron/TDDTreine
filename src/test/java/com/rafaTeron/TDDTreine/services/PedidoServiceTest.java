@@ -164,5 +164,22 @@ public class PedidoServiceTest {
 		Mockito.verify(emailService).notificarAtraso(usuario);
 		Mockito.verifyNoMoreInteractions(emailService);
 	}
+	
+	@Test
+	public void deveTratarErronoSPC() throws Exception{
+		//cenario
+		Usuario usuario = UsuarioBuilder.umUsuario().agora();
+		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().agora());
+		Mockito.when(spcService.possuiNegativacao(usuario)).thenThrow(new Exception("Falha"));
+		
+		//açao
+		try {
+			pedidoService.comprarBebida(usuario, bebidas);
+			//verificaçao
+			Assertions.fail();
+		} catch (PedidoException e) {
+			Assertions.assertEquals( "Problema com SPC , tente novamente." ,e.getMessage());
+		}
+	}
 
 }
