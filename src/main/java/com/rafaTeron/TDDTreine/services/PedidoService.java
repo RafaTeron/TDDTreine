@@ -12,14 +12,13 @@ import com.rafaTeron.TDDTreine.exceptions.PedidoException;
 import com.rafaTeron.TDDTreine.repositories.PedidoRepository;
 import com.rafaTeron.TDDTreine.utils.DataUtils;
 
-import buildermaster.BuilderMaster;
-
 
 
 public class PedidoService {
 	
 	private PedidoRepository pedidoRepository;
 	private SPCService spcService;
+	private EmailService emailService;
 	
 	public Pedido comprarBebida(Usuario usuario, List<Bebida> bebidas) throws PedidoException,BebidaSemEstoqueException {
 		if (usuario == null) {
@@ -70,8 +69,23 @@ public class PedidoService {
 		return pedido;
 	}
 	
-	public static void main(String[] args) {
-		new BuilderMaster().gerarCodigoClasse(Bebida.class);
+	public void notificarAtrasos(){
+		List<Pedido> pedido = pedidoRepository.obterLocacoesPendentes();
+		for(Pedido x : pedido) {
+			if(x.getDataFinalEntrega().isBefore(LocalDate.now())) {
+				emailService.notificarAtraso(x.getUsuario());
+			}
+		}
+	}
+	
+	public void prorrogarPedido(Pedido pedido, int dias) {
+		Pedido novoPedido = new Pedido();
+		novoPedido.setUsuario(pedido.getUsuario());
+		novoPedido.setPedido(pedido.getPedido());
+		novoPedido.setDataInicio(LocalDate.now());
+		novoPedido.setDataFinalEntrega(DataUtils.obterDataComDiferencaDias(dias));
+		novoPedido.setValor(pedido.getValor() * dias);
+		pedidoRepository.save(novoPedido);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.rafaTeron.TDDTreine.services;
 
+import static org.mockito.Mockito.times;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.rafaTeron.TDDTreine.builder.BebidaBuilder;
+import com.rafaTeron.TDDTreine.builder.PedidoBuilder;
 import com.rafaTeron.TDDTreine.builder.UsuarioBuilder;
 import com.rafaTeron.TDDTreine.entities.Bebida;
 import com.rafaTeron.TDDTreine.entities.Pedido;
@@ -29,6 +32,9 @@ public class PedidoServiceTest {
 	
 	@Mock
 	private SPCService spcService;
+	
+	@Mock
+	private EmailService emailService;
 	
 	@Mock
 	private PedidoRepository pedidoRepository;
@@ -129,7 +135,6 @@ public class PedidoServiceTest {
 		//cenario
 		Usuario usuario = UsuarioBuilder.umUsuario().agora();
 		List<Bebida> bebidas = List.of(BebidaBuilder.umBebida().agora());
-
 		
 		Mockito.when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
 		
@@ -143,6 +148,21 @@ public class PedidoServiceTest {
 		}
 		
 		Mockito.verify(spcService).possuiNegativacao(usuario);
+	}
+	
+	@Test
+	public void deveEnviarEmailParaLocacoesAtrasadas() {
+		//cenario
+		Usuario usuario = UsuarioBuilder.umUsuario().agora();
+		List<Pedido> pedidos = List.of(PedidoBuilder.umPedido().atrasada().comUsuario(usuario).agora());
+		Mockito.when(pedidoRepository.obterLocacoesPendentes()).thenReturn(pedidos);
+		//açao
+		pedidoService.notificarAtrasos();
+		//verificaçao
+		//times() é o numero de verificaçoes
+		Mockito.verify(emailService, times(1)).notificarAtraso(Mockito.any(Usuario.class));
+		Mockito.verify(emailService).notificarAtraso(usuario);
+		Mockito.verifyNoMoreInteractions(emailService);
 	}
 
 }

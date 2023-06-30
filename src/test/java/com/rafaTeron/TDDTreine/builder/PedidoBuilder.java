@@ -8,7 +8,6 @@ import com.rafaTeron.TDDTreine.entities.Pedido;
 import com.rafaTeron.TDDTreine.entities.Usuario;
 import com.rafaTeron.TDDTreine.utils.DataUtils;
 
-
 public class PedidoBuilder {
 	private Pedido elemento;
 	private PedidoBuilder(){}
@@ -48,6 +47,12 @@ public class PedidoBuilder {
 
 	public PedidoBuilder comDataFinalEntrega(LocalDate param) {
 		elemento.setDataFinalEntrega(param);
+		return this;
+	}
+	
+	public PedidoBuilder atrasada(){
+		elemento.setDataInicio(DataUtils.obterDataComDiferencaDias(-4));
+		elemento.setDataFinalEntrega(DataUtils.obterDataComDiferencaDias(-2));
 		return this;
 	}
 
