@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -151,7 +152,7 @@ public class PedidoServiceTest {
 	}
 	
 	@Test
-	public void deveEnviarEmailParaLocacoesAtrasadas() {
+	public void deveEnviarEmailParaPedidosAtrasadas() {
 		//cenario
 		Usuario usuario = UsuarioBuilder.umUsuario().agora();
 		List<Pedido> pedidos = List.of(PedidoBuilder.umPedido().atrasada().comUsuario(usuario).agora());
@@ -180,6 +181,25 @@ public class PedidoServiceTest {
 		} catch (PedidoException e) {
 			Assertions.assertEquals( "Problema com SPC , tente novamente." ,e.getMessage());
 		}
+	}
+	
+	@Test
+	public void deveProrrogarUmPedido(){
+		//cenario
+		Pedido pedidos = PedidoBuilder.umPedido().agora();
+		//açao
+		pedidoService.prorrogarPedido(pedidos, 3);
+		//verificaçao
+		ArgumentCaptor<Pedido> argCapt = ArgumentCaptor.forClass(Pedido.class);
+		Mockito.verify(pedidoRepository).save(argCapt.capture());
+		Pedido pedidoRetornada = argCapt.getValue();
+		
+		Assertions.assertAll("Prorrogar Pedido",
+				() -> Assertions.assertEquals(9.0, pedidoRetornada.getValor()),
+				() -> Assertions.assertEquals(LocalDate.now(), pedidoRetornada.getDataInicio()),
+				() -> Assertions.assertTrue(MatchersProprios.ehHojeComDiferencaDias(3).matches(pedidoRetornada.getDataFinalEntrega()))
+				);
+		
 	}
 
 }
