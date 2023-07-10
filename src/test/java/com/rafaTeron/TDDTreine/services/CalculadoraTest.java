@@ -61,5 +61,15 @@ public class CalculadoraTest {
 		Assertions.assertEquals(2, resultado);
 	}
 	
+	@Test
+	public void naoPodeDividirPorZero() throws Exception{
+		//cenario
+		int b = 0;
+		int a = 6;
+		//açao
+		Assertions.assertThrows(NaoPodeDividirPorZeroException.class, 
+				() -> {calc.divide(a, b);}
+				);		
+	}
 	
 }

@@ -20,19 +20,27 @@ public class PedidoService {
 	private SPCService spcService;
 	private EmailService emailService;
 	
-	public Pedido comprarBebida(Usuario usuario, List<Bebida> bebidas) throws PedidoException,BebidaSemEstoqueException {
-		if (usuario == null) {
-			throw new PedidoException("Usuario Inválido");
-		}
-		if (bebidas == null || bebidas.isEmpty()) {
-			throw new PedidoException("Sem bebida");
-		}
+	private void estoqueVazio(List<Bebida> bebidas) throws BebidaSemEstoqueException {
 		for(Bebida bebida: bebidas) {
 			if(bebida.getEstoque() == 0) {
 				throw new BebidaSemEstoqueException("Sem bebida no estoque");
 			}
 		}
-		
+	}
+
+	private void semBebida(List<Bebida> bebidas) throws PedidoException {
+		if (bebidas == null || bebidas.isEmpty()) {
+			throw new PedidoException("Sem bebida");
+		}
+	}
+
+	private void semUsuario(Usuario usuario) throws PedidoException {
+		if (usuario == null) {
+			throw new PedidoException("Usuario Inválido");
+		}
+	}
+	
+	private void verificarSpc(Usuario usuario) throws PedidoException {
 		boolean negativado;
 		try {
 			negativado = spcService.possuiNegativacao(usuario);
@@ -43,20 +51,23 @@ public class PedidoService {
 		if(negativado) {
 			throw new PedidoException("Usuario negativado");
 		}
+	}
+	
+	public Pedido comprarBebida(Usuario usuario, List<Bebida> bebidas) throws PedidoException,BebidaSemEstoqueException {
+		semUsuario(usuario);
+		semBebida(bebidas);
+		estoqueVazio(bebidas);
+		
+		verificarSpc(usuario);
 		
 		Pedido pedido = new Pedido();
 		pedido.setUsuario(usuario);
 		pedido.setPedido(bebidas);
-		pedido.setDataInicio(LocalDate.now());
-		Double valorTotal = 0d;
-		for(int i = 0; i < bebidas.size(); i++) {
-			Bebida bebida = bebidas.get(i);
-			Double valorFilme = bebida.getValor();
-			valorTotal += valorFilme;
-		}
+		pedido.setDataInicio(dataHoje());
+		Double valorTotal = calcularValorPedido(bebidas);
 		pedido.setValor(valorTotal);
 		
-		LocalDate dataEntrega = LocalDate.now();
+		LocalDate dataEntrega = dataHoje();
 	    dataEntrega = DataUtils.adicionarDias(dataEntrega, 6);
 		
 		if (dataEntrega.getDayOfWeek() == DayOfWeek.SUNDAY) {
@@ -68,11 +79,26 @@ public class PedidoService {
 		
 		return pedido;
 	}
+
+
+	private Double calcularValorPedido(List<Bebida> bebidas) {
+		Double valorTotal = 0d;
+		for(int i = 0; i < bebidas.size(); i++) {
+			Bebida bebida = bebidas.get(i);
+			Double valorFilme = bebida.getValor();
+			valorTotal += valorFilme;
+		}
+		return valorTotal;
+	}
+
+	protected LocalDate dataHoje() {
+		return LocalDate.now();
+	}
 	
 	public void notificarAtrasos(){
 		List<Pedido> pedido = pedidoRepository.obterLocacoesPendentes();
 		for(Pedido x : pedido) {
-			if(x.getDataFinalEntrega().isBefore(LocalDate.now())) {
+			if(x.getDataFinalEntrega().isBefore(dataHoje())) {
 				emailService.notificarAtraso(x.getUsuario());
 			}
 		}
@@ -82,7 +108,7 @@ public class PedidoService {
 		Pedido novoPedido = new Pedido();
 		novoPedido.setUsuario(pedido.getUsuario());
 		novoPedido.setPedido(pedido.getPedido());
-		novoPedido.setDataInicio(LocalDate.now());
+		novoPedido.setDataInicio(dataHoje());
 		novoPedido.setDataFinalEntrega(DataUtils.obterDataComDiferencaDias(dias));
 		novoPedido.setValor(pedido.getValor() * dias);
 		pedidoRepository.save(novoPedido);
